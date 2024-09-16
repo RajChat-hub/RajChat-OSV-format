@@ -33,7 +33,7 @@ To get started with the OSV Converter, follow these steps:
 
 
     https://github.com/RajChat-hub/RajChat-OSV-format.git
-    cd osv-converter
+    cd RajChat-OSV-format
 
     Set Up Your Environment:
 
