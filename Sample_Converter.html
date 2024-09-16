@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OSV Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        input, button {
+            margin: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        a {
+            display: block;
+            margin-top: 20px;
+            color: #007BFF;
+            text-decoration: none;
+        }
+
+        footer {
+            margin-top: 30px;
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <h1>OSV File Converter</h1>
+    <input type="file" id="fileInput">
+    <button id="convertButton">Convert to OSV</button>
+    <a id="downloadLink" style="display: none;"></a>
+
+    <footer>
+        &copy; 2024 Rajdeep Chatterjee. All rights reserved.
+    </footer>
+
+    <script>
+        document.getElementById('convertButton').addEventListener('click', () => {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    const fileContent = reader.result;
+                    let osvContent;
+
+                    // Check for CSV file type
+                    if (file.type === 'text/csv' || file.name.endsWith('.csv')) {
+                        osvContent = convertCSVToOSV(fileContent);
+                        downloadOSVFile(osvContent, 'converted.osv');
+                    } else {
+                        alert('Unsupported file format.');
+                    }
+                };
+                reader.readAsText(file); // Read text files
+            } else {
+                alert('Please select a file.');
+            }
+        });
+
+        function convertCSVToOSV(content) {
+            // Convert CSV content to OSV format
+            const lines = content.split('\n');
+            return lines.map(line => line.split(',').join('/')).join('\n');
+        }
+
+        function downloadOSVFile(content, filename) {
+            const blob = new Blob([content], { type: 'application/octet-stream' });
+            const url = URL.createObjectURL(blob);
+            const downloadLink = document.getElementById('downloadLink');
+            downloadLink.href = url;
+            downloadLink.download = filename; // Ensure it ends with .osv
+            downloadLink.style.display = 'block';
+            downloadLink.textContent = 'Download OSV File';
+        }
+    </script>
+</body>
+</html>
